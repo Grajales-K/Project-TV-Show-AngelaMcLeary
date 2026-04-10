@@ -15,7 +15,7 @@ function makePageForEpisodes(episodeList) {
 
   episodeList.forEach((episodes) => {
     const seasonTitle = document.createElement("h2");
-    seasonTitle.textContent = `${makeSeasonAndEpisodes(episodes)}: ${episodes.name}`;
+    seasonTitle.textContent = `${episodes.name} ${makeSeasonAndEpisodes(episodes)}`;
     rootElem.appendChild(seasonTitle);
 
     const image = document.createElement("img");
