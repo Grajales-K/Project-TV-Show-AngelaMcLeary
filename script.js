@@ -12,19 +12,29 @@ function makeSeasonAndEpisodes(episodes) {
 
 function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
+  //clear previous content
+  rootElem.innerHTML = "";
 
   episodeList.forEach((episodes) => {
+    //container for episodes
+    const episodeCard = document.createElement("div");
+    episodeCard.className = "episode-card";
+    //season title
     const seasonTitle = document.createElement("h2");
     seasonTitle.textContent = `${episodes.name} ${makeSeasonAndEpisodes(episodes)}`;
-    rootElem.appendChild(seasonTitle);
-
+    episodeCard.appendChild(seasonTitle);
+    //image for season episode
     const image = document.createElement("img");
     image.src = episodes.image.medium;
-    rootElem.appendChild(image);
-
-    const summary = document.createElement ("summary")
+    image.alt = episodeCard.name;
+    episodeCard.appendChild(image);
+    //summary for season episode
+    const summary = document.createElement ("p")
+    summary.className = "summary";
     summary.innerHTML = episodes.summary;
-    rootElem.appendChild(summary)
+    episodeCard.appendChild(summary)
+    //add card to page containing season, episode, summary and image
+    rootElem.appendChild(episodeCard);
   });
 }
 window.onload = setup;
