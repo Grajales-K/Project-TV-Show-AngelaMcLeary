@@ -4,20 +4,28 @@ function setup() {
   makePageForEpisodes(allEpisodes);
 
   // ---------- Search bar ---------
-  const SearchInput = document.getElementById('search');
+  const searchInput = document.getElementById('search');
 
-  SearchInput.addEventListener('input', (event) => {
+  const countDisplay = document.getElementById('count-info');
+  if (countDisplay) {
+    countDisplay.innerText = `Displaying ${allEpisodes.length}/${allEpisodes.length} episodes`;
+  }
+
+  searchInput.addEventListener('input', (event) => {
     searchTerm = event.target.value.toLowerCase();
 
     const filterEpisodes = allEpisodes.filter((episode) => {
-    const nameMatch = episode.name.toLowerCase().includes(searchTerm);
+      const nameMatch = episode.name.toLowerCase().includes(searchTerm);
 
-    // to avoid null errors and convert summary to lowercase for comparison
-    const summaryMatch = (episode.summary || "") .toLowerCase().includes(searchTerm);
-
-    return nameMatch || summaryMatch;
-  });
-
+      // to avoid null errors and convert summary to lowercase for comparison
+      const summaryMatch = (episode.summary || '')
+        .toLowerCase()
+        .includes(searchTerm);
+      return nameMatch || summaryMatch;
+    });
+    if (countDisplay) {
+      countDisplay.innerText = `Displaying ${filterEpisodes.length}/${allEpisodes.length} episodes`;
+    }
     makePageForEpisodes(filterEpisodes);
   });
 }
