@@ -6,9 +6,10 @@ function setup() {
   // ---------- Search bar ---------
   const searchInput = document.getElementById('search');
 
+  // -------displaySearchCount------
   const countDisplay = document.getElementById('count-info');
   if (countDisplay) {
-    countDisplay.innerText = `Displaying ${allEpisodes.length}/${allEpisodes.length} episodes`;
+    countDisplay.textContent = `Displaying ${allEpisodes.length}/${allEpisodes.length} episodes`;
   }
 
   searchInput.addEventListener('input', (event) => {
@@ -24,7 +25,7 @@ function setup() {
       return nameMatch || summaryMatch;
     });
     if (countDisplay) {
-      countDisplay.innerText = `Displaying ${filterEpisodes.length}/${allEpisodes.length} episodes`;
+      countDisplay.textContent = `Displaying ${filterEpisodes.length}/${allEpisodes.length} episodes`;
     }
     makePageForEpisodes(filterEpisodes);
   });
@@ -40,7 +41,7 @@ function makeSeasonAndEpisodes(episodes) {
 function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById('root');
   //clear previous content
-  rootElem.innerHTML = '';
+  rootElem.textContent = '';
 
   episodeList.forEach((episodes) => {
     //container for episodes
@@ -60,10 +61,12 @@ function makePageForEpisodes(episodeList) {
     //summary for season episode
     const summary = document.createElement('p');
     summary.className = 'summary';
-    summary.innerHTML = episodes.summary;
+    summary.textContent = episodes.summary;
     episodeCard.appendChild(summary);
     //add card to page containing season, episode, summary and image
     rootElem.appendChild(episodeCard);
   });
 }
+
+
 window.onload = setup;
