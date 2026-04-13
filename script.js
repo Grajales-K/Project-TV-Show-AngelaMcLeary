@@ -7,6 +7,7 @@ function setup() {
   updateCount(allEpisodes.length, allEpisodes.length);
 
   fillSelector(allEpisodes);
+  setupSelector(allEpisodes);
 }
 
 function makeSeasonAndEpisodes(episodes) {
@@ -86,6 +87,26 @@ function fillSelector(allEpisodes){
     option.textContent = `${makeSeasonAndEpisodes(episode)} - ${episode.name}`;
     selector.appendChild(option)
   })
+}
+
+function setupSelector(allEpisodes){
+  const selector = document.getElementById('episodes-menu');
+
+  selector.addEventListener('change', (event) => {
+    const selectId = event.target.value;
+
+    if(selectId === 'all'){
+      makePageForEpisodes(allEpisodes);
+      updateCount(allEpisodes.length, allEpisodes.length);
+    }else { 
+      //find the episode with the matching id and display it
+      const selectEpisode = allEpisodes.filter(episode => episode.id == selectId)
+      makePageForEpisodes(selectEpisode);
+      updateCount(selectEpisode.length, allEpisodes.length);
+    }
+
+  })
+
 }
 
 
