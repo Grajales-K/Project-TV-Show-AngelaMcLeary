@@ -99,10 +99,16 @@ function updateCount(found, total) {
 function fillSelector(allEpisodes) {
   const selector = document.getElementById("episodes-menu");
 
+  // add show all episodes in option
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "all";
+  defaultOption.textContent = "Show all episodes";
+  selector.appendChild(defaultOption);
+
+  // add episode options
   allEpisodes.forEach((episode) => {
     const option = document.createElement("option");
     option.value = episode.id;
-
     option.textContent = `${makeSeasonAndEpisodes(episode)} - ${episode.name}`;
     selector.appendChild(option);
   });
