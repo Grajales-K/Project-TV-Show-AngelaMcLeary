@@ -6,7 +6,10 @@ async function setup() {
   rootElem.innerHTML = "<p>Loading episodes… please wait.</p>";
 
   try {
-    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
+    // const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
+    //simulate error
+    const response = await fetch("https://api.tvmaze.com/shows/INVALID_URL");
+
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
