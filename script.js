@@ -1,14 +1,31 @@
 //You can edit ALL of the code here
-function setup() {
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
+async function setup() {
+  const rootElem = document.getElementById("root");
 
-  searchTopic(allEpisodes);
-  updateCount(allEpisodes.length, allEpisodes.length);
+  rootElem.innerHTML = "<p>Loading episodes… please wait.</p>";
 
-  fillSelector(allEpisodes);
-  setupSelector(allEpisodes);
+  try {
+    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const allEpisodes = await response.json();
+
+    // Now run your existing logic
+    makePageForEpisodes(allEpisodes);
+    searchTopic(allEpisodes);
+    updateCount(allEpisodes.length, allEpisodes.length);
+    fillSelector(allEpisodes);
+    setupSelector(allEpisodes);
+
+  } catch (error) {
+    rootElem.innerHTML = `<p style="color:red;">Failed to load episodes. Please try again later.</p>`;
+    console.error("Fetch error:", error);
+  }
 }
+
 
 function makeSeasonAndEpisodes(episodes) {
   const { season, number } = episodes;
@@ -53,7 +70,7 @@ function searchTopic(allEpisodes) {
   const searchInput = document.getElementById('search');
   searchInput.value = "";
   searchInput.dispatchEvent(new Event('input'));
-  
+
   document.getElementById('episodes-menu').value = "all";
 
   searchInput.addEventListener('input', (event) => {
