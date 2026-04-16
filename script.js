@@ -1,15 +1,30 @@
-//You can edit ALL of the code here
+function fillShowsSelector() {
+  const showMEnu = document.getElementById('show-menu');
+
+  // clear existing options except the first one
+  showMEnu.innerHTML = '<option value="" >select a Show...</option>?';
+
+  allShow.forEach((show)=> {
+    const option = document.createElement('option');
+    option.value = show.id;
+    option.textContent = show.name;
+    showMEnu.appendChild(option);
+  });
+
+}
+
 //update to call data to use API
 async function setup() {
-  const rootElem = document.getElementById("root");
+  const rootElem = document.getElementById('root');
 
-  rootElem.innerHTML = "<p>Loading episodes… please wait.</p>";
+  rootElem.innerHTML = '<p>Loading episodes… please wait.</p>';
 
   try {
-    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
+    const response = await fetch("https://api.tvmaze.com/shows");
+    const response = await fetch('https://api.tvmaze.com/shows/82/episodes');
 
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error('Network response was not ok');
     }
     //update convert response to JSON
     const allEpisodes = await response.json();
@@ -22,40 +37,40 @@ async function setup() {
   } catch (error) {
     //check for errors
     rootElem.innerHTML = `<p style="color:red;">Failed to load episodes. Please try again later.</p>`;
-    console.error("Fetch error:", error);
+    console.error('Fetch error:', error);
   }
 }
 
 function makeSeasonAndEpisodes(episodes) {
   const { season, number } = episodes;
-  const paddedSeason = season.toString().padStart(2, "0");
-  const paddedEpisode = number.toString().padStart(2, "0");
+  const paddedSeason = season.toString().padStart(2, '0');
+  const paddedEpisode = number.toString().padStart(2, '0');
   return `S${paddedSeason}E${paddedEpisode}`;
 }
 
 function makePageForEpisodes(episodeList) {
-  const rootElem = document.getElementById("root");
+  const rootElem = document.getElementById('root');
   //clear previous content
-  rootElem.innerHTML = "";
+  rootElem.innerHTML = '';
 
   episodeList.forEach((episodes) => {
     //container for episodes
-    const episodeCard = document.createElement("div");
-    episodeCard.className = "episode-card";
+    const episodeCard = document.createElement('div');
+    episodeCard.className = 'episode-card';
     //season title
-    const seasonTitle = document.createElement("h2");
+    const seasonTitle = document.createElement('h2');
     seasonTitle.textContent = `${episodes.name} ${makeSeasonAndEpisodes(
-      episodes,
+      episodes
     )}`;
     episodeCard.appendChild(seasonTitle);
     //image for season episode
-    const image = document.createElement("img");
+    const image = document.createElement('img');
     image.src = episodes.image.medium;
     image.alt = episodes.name;
     episodeCard.appendChild(image);
     //summary for season episode
-    const summary = document.createElement("p");
-    summary.className = "summary";
+    const summary = document.createElement('p');
+    summary.className = 'summary';
     summary.innerHTML = episodes.summary;
     episodeCard.appendChild(summary);
     //add card to page containing season, episode, summary and image
@@ -65,22 +80,22 @@ function makePageForEpisodes(episodeList) {
 
 // ---------- Search bar ---------
 function searchTopic(allEpisodes) {
-  const searchInput = document.getElementById("search");
-  searchInput.value = "";
-  searchInput.dispatchEvent(new Event("input"));
+  const searchInput = document.getElementById('search');
+  searchInput.value = '';
+  searchInput.dispatchEvent(new Event('input'));
 
-  document.getElementById("episodes-menu").value = "all";
+  document.getElementById('episodes-menu').value = 'all';
 
-  searchInput.addEventListener("input", (event) => {
+  searchInput.addEventListener('input', (event) => {
     // reset selector every time user types
-    document.getElementById("episodes-menu").value = "all";
+    document.getElementById('episodes-menu').value = 'all';
     const searchTerm = event.target.value.toLowerCase();
 
     const filterEpisodes = allEpisodes.filter((episode) => {
       const nameMatch = episode.name.toLowerCase().includes(searchTerm);
 
       // to avoid null errors and convert summary to lowercase for comparison
-      const summaryMatch = (episode.summary || "")
+      const summaryMatch = (episode.summary || '')
         .toLowerCase()
         .includes(searchTerm);
       return nameMatch || summaryMatch;
@@ -92,26 +107,26 @@ function searchTopic(allEpisodes) {
 
 // -------displaySearchCount------
 function updateCount(found, total) {
-  const countDisplay = document.getElementById("count-info");
+  const countDisplay = document.getElementById('count-info');
   if (countDisplay) {
     countDisplay.textContent = `Displaying ${found}/${total} episodes`;
   }
 }
 
 function fillSelector(allEpisodes) {
-  const selector = document.getElementById("episodes-menu");
-//clear selector
-  selector.innerHTML = "";
+  const selector = document.getElementById('episodes-menu');
+  //clear selector
+  selector.innerHTML = '';
 
   // add show all episodes in option---->>>>
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "all";
-  defaultOption.textContent = "Show all episodes";
+  const defaultOption = document.createElement('option');
+  defaultOption.value = 'all';
+  defaultOption.textContent = 'Show all episodes';
   selector.appendChild(defaultOption);
 
   // add episode options
   allEpisodes.forEach((episode) => {
-    const option = document.createElement("option");
+    const option = document.createElement('option');
     option.value = episode.id;
     option.textContent = `${makeSeasonAndEpisodes(episode)} - ${episode.name}`;
     selector.appendChild(option);
@@ -119,22 +134,22 @@ function fillSelector(allEpisodes) {
 }
 
 function setupSelector(allEpisodes) {
-  const selector = document.getElementById("episodes-menu");
+  const selector = document.getElementById('episodes-menu');
 
-  selector.addEventListener("change", (event) => {
+  selector.addEventListener('change', (event) => {
     const selectId = event.target.value;
     //clear search input
-    const searchInput = document.getElementById("search");
-    searchInput.value = "";
-    searchInput.dispatchEvent(new Event("input"));
+    const searchInput = document.getElementById('search');
+    searchInput.value = '';
+    searchInput.dispatchEvent(new Event('input'));
 
-    if (selectId === "all") {
+    if (selectId === 'all') {
       makePageForEpisodes(allEpisodes);
       updateCount(allEpisodes.length, allEpisodes.length);
     } else {
       //find the episode with the matching id and display it
       const selectEpisode = allEpisodes.filter(
-        (episode) => episode.id == selectId,
+        (episode) => episode.id == selectId
       );
       makePageForEpisodes(selectEpisode);
       updateCount(selectEpisode.length, allEpisodes.length);
