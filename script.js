@@ -45,10 +45,10 @@ async function setup() {
     const showsResponse = await fetch('https://api.tvmaze.com/shows');
     const allShows = await showsResponse.json();
 
-    // sorting alphabetically all shows
+    // sorting alphabetically all shows with case with acent insensitivity
     allShows.sort((a, b) =>
-      a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-    );
+      a.name.toLowerCase().toLocaleCompare(b.name.toLowerCase()));
+  
 
     //pass the shows to fill the selector with options
     fillShowsSelector(allShows);
