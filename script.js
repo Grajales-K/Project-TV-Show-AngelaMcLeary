@@ -12,11 +12,33 @@ function fillShowsSelector(allShows) {
   });
 }
 
+// Encapsulates the logic to get episodes for any specific show ID.
+async function fetchDisplayEpisodes(showId){
+  const rootElem = document.getElementById('root');
+  rootElem.innerHTML = '<p>Loading episodes… please wait.</p>';
+
+  try {
+    const episodesResponse = await fetch(`https://api.tvmaze.com/shows/${showId}/episodes`);
+    const allEpisodes = await episodesResponse.json();
+
+    makePageForEpisodes(allEpisodes);
+    searchTopic(allEpisodes);
+    updateCount(allEpisodes.length, allEpisodes.length);
+    fillSelector(allEpisodes);
+    setupSelector(allEpisodes);
+
+  } catch (error) {
+    rootElem.innerHTML = `<p style="color:red;">Failed to load episodes. Please try again later.</p>`;
+    console.error('fetch error:', error);
+  }
+}
+
+
+
 //update to call data to use API
 async function setup() {
   const rootElem = document.getElementById('root');
-
-  rootElem.innerHTML = '<p>Loading episodes… please wait.</p>';
+  const showMenu = document.getElementById('show-menu');
 
   try {
     // 1. Fetch all shows
@@ -28,22 +50,19 @@ async function setup() {
       a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
     );
 
-    // Fill the selector
+    //pass the shows to fill the selector with options
     fillShowsSelector(allShows);
 
-    // Fetch episodes for the default show (ID 82)
-    const episodesResponse = await fetch(
-      'https://api.tvmaze.com/shows/82/episodes'
-    );
-    //update convert response to JSON
-    const allEpisodes = await episodesResponse.json();
+    // Fill the selector to be no empty
+    fetchDisplayEpisodes(82);
 
-    // run logic logic as is
-    makePageForEpisodes(allEpisodes);
-    searchTopic(allEpisodes);
-    updateCount(allEpisodes.length, allEpisodes.length);
-    fillSelector(allEpisodes);
-    setupSelector(allEpisodes);
+    showMenu.addEventListener('change', (event) => {
+      const selectedShowId = event.target.value;
+      if (selectedShowId !== ""){
+        fetchDisplayEpisodes(selectedShowId);
+      }
+    })
+
   } catch (error) {
     //Inform the user visually on the page
     rootElem.innerHTML = `<p style="color:red;">Failed to load episodes. Please try again later.</p>`;
