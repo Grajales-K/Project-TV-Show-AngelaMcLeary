@@ -1,39 +1,56 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | Angela McLeary (AngelaMcLeary)</title>
-    <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  </head>
 
-  <body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TV Show Project | Angela McLeary (AngelaMcLeary)</title>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+
+<body>
+  <header>
     <h1>TV Show Project</h1>
-    <div class="searchbar" >
-      <label>
-        <input type="text" id="search"  class="select" name="search" placeholder="Search here ..." />
-      </label>
+
+    <nav class="searchbar">
+
+      <!-- searchbar -->
+      <div class="select">
+        <label for="search">Search</label>
+        <input type="text" id="search" class="select" name="search" placeholder="Search here ..." />
+      </div>
+
+      <!-- dropdown to select show -->
+      <div class="select">
+        <label for="show-menu">Show:</label>
+        <select id="show-menu" class="select">
+          <option value="">All Shows</option>
+        </select>
+      </div>
+
       <!-- dropdown to select episode -->
-      <select id="episodes-menu" class="select">
-        <option value="all">All Episodes</option>
-      </select>
+      <div class="select">
+        <label for="episodes-menu">Episode:</label>
+        <select id="episodes-menu" class="select">
+          <option value="all">All Episodes</option>
+        </select>
+      </div>
+
       <!-- displaying -->
       <span id="count-info"></span>
-    </div>
+    </nav>
+  </header>
+  <main id="root"></main>
 
-    <div id="root"></div>
+  <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
+  <footer>
+    <a href="https://www.tvmaze.com/">Data from TVmaze</a>
+    licensed under
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+  </footer>
+  <!-- Loads YOUR javascript code -->
+  <script src="script.js"></script>
+</body>
 
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <footer>
-      <a href="https://www.tvmaze.com/">Data from TVmaze</a>
-      licensed under
-      <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
-    </footer>
-    <!-- Loads YOUR javascript code -->
-    <script src="script.js"></script>
-  </body>
 </html>
-
-
