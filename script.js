@@ -137,6 +137,8 @@ async function setup() {
     // pass the shows to fill the selector with options
     fillShowsSelector(allShows);
 
+    setupShowSearch(allShows);
+
     // Listener to change episodes when a new show is selected
     showMenu.addEventListener("change", (event) => {
       const selectedShowId = event.target.value;
@@ -157,6 +159,30 @@ async function setup() {
     rootElem.innerHTML = `<p style="color:red;">Failed to load data. Please try again later.</p>`;
     console.error("Fetch error:", error);
   }
+}
+
+//setups for shows
+
+function setupShowSearch(allShows) {
+  const searchInput = document.getElementById("search");
+  const countDisplay = document.getElementById("count-info");
+
+  searchInput.addEventListener("input", (event) => {
+    const query = event.target.value.toLowerCase();
+
+    const filteredShows = allShows.filter(show => {
+      const nameMatch = show.name.toLowerCase().includes(query);
+      const genreMatch = show.genres.join(" ").toLowerCase().includes(query);
+      const summaryMatch = (show.summary || "").toLowerCase().includes(query);
+
+      return nameMatch || genreMatch || summaryMatch;
+    });
+
+    makePageForShows(filteredShows);
+
+    // update count
+    countDisplay.textContent = `Displaying ${filteredShows.length} shows`;
+  });
 }
 
 /**
