@@ -21,6 +21,20 @@ body {
   align-items: start;
 }
 
+#breadcrumb {
+  margin: 20px;
+  font-size: 1.1rem;
+}
+
+.breadcrumb-link {
+  color: #0077cc;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.breadcrumb-link:hover {
+  color: #005fa3;
+}
 
 .message-container {
   display: flex;

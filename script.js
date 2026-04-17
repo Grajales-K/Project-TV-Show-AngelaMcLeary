@@ -1,39 +1,40 @@
 // Global cache to store episodes and avoid multiple fetches for the same show
 const episodesCache = {};
+let allShows = [];
 
 function renderBreadcrumb(parts) {
   const breadcrumb = document.getElementById("breadcrumb");
   breadcrumb.innerHTML = "";
 
-  parts.forEach((part, index) =>{
+  parts.forEach((part, index) => {
     const span = document.createElement("span");
 
     if (part.clickable) {
       span.textContent = part.label;
       span.classList.add("breadcrumb-link");
-      span.addEventListener("click, part.onClick");
+    }
+    if (part.onClick) {
+      span.addEventListener("click", part.onClick);
     } else {
       span.textContent = part.label;
     }
-      breadcrumb.appendChild(span);
 
-      // add ⬅ seperator after last item
-    if (index < parts.length -1) {
+    breadcrumb.appendChild(span);
+
+    // add ⬅ separator after last item
+    if (index < parts.length - 1) {
       const separator = document.createElement("span");
       //find an arrow code from ascii??
       separator.textContent = " > ";
       breadcrumb.appendChild(separator);
-    };
+    }
   });
-};
+}
 
 /**
  * Fills the show selector dropdown with all available shows
  */
 function fillShowsSelector(allShows) {
-  renderBreadcrumb([
-    {label:"Shows", clickable: false}
-  ]);
   const showMenu = document.getElementById("show-menu");
   // clear existing options except the first one
   showMenu.innerHTML = '<option value="" >select a Show...</option>';
@@ -52,6 +53,22 @@ function fillShowsSelector(allShows) {
 async function fetchDisplayEpisodes(showId) {
   const rootElem = document.getElementById("root");
 
+  // get show details first
+  const showResponse = await fetch(`https://api.tvmaze.com/shows/${showId}`);
+  const show = await showResponse.json();
+
+  //render breadcrumbs for show,name
+  renderBreadcrumb([
+    {
+      label: "Shows",
+      clickable: true,
+      onClick: () => makePageForShows(allShows),
+    },
+    {
+      label: show.name,
+      clickable: false,
+    },
+  ]);
   // Check if the show is already in cache to save network requests
   if (episodesCache[showId]) {
     console.log(`Loading show ${showId} from cache...`);
@@ -103,7 +120,7 @@ async function setup() {
   try {
     // 1. Fetch all shows from TVMaze API
     const showsResponse = await fetch("https://api.tvmaze.com/shows");
-    const allShows = await showsResponse.json();
+    allShows = await showsResponse.json();
 
     // sorting alphabetically all shows with case and accent insensitivity
     allShows.sort((a, b) =>
@@ -147,6 +164,7 @@ function makeSeasonAndEpisodes(episode) {
 
 // make the page for the shows
 function makePageForShows(allShows) {
+  renderBreadcrumb([{ label: "Shows", clickable: false }]);
   const root = document.getElementById("root");
   root.innerHTML = "";
 
@@ -166,11 +184,11 @@ function makePageForShows(allShows) {
     showCard.appendChild(title);
 
     const summary = document.createElement("p");
-    summary.className = 'summary';
-    summary.innerHTML = show.summary || 'No summary available';
+    summary.className = "summary";
+    summary.innerHTML = show.summary || "No summary available";
     showCard.appendChild(summary);
-    
-    const genres = document.createElement('p');
+
+    const genres = document.createElement("p");
     genres.innerHTML = `<strong>Genres:</strong> ${show.genres.join(", ") || "N/A"}`;
     showCard.appendChild(genres);
 
@@ -187,9 +205,9 @@ function makePageForShows(allShows) {
     const runtime = document.createElement("p");
     runtime.innerHTML = `<strong>Runtime:</strong> ${show.runtime ? show.runtime + " min" : "N/A"}`;
     //make the cards clickable ⬅
-    showCard.addEventListener('click', () => {
+    showCard.addEventListener("click", () => {
       fetchDisplayEpisodes(show.id);
-    })
+    });
 
     root.appendChild(showCard);
   });
@@ -213,7 +231,7 @@ function makePageForEpisodes(episodeList) {
     seasonTitle.textContent = `${episode.name} - ${makeSeasonAndEpisodes(
       episode,
     )}`;
-    
+
     episodeCard.appendChild(seasonTitle);
 
     // image for season episode
