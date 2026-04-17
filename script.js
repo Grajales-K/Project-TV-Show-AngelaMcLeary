@@ -58,20 +58,26 @@ async function fetchDisplayEpisodes(showId) {
   const show = await showResponse.json();
 
   //render breadcrumbs for show,name
-  renderBreadcrumb([
-    {
-      label: "Shows",
-      clickable: true,
-      onClick: () => makePageForShows(allShows),
-    },
-    {
-      label: show.name,
-      clickable: false,
-    },
-  ]);
+renderBreadcrumb([
+  {
+    label: "Shows",
+    clickable: true,
+    onClick: () => makePageForShows(allShows)
+  },
+  {
+    label: show.name,
+    clickable: true,
+    onClick: () => fetchDisplayEpisodes(showId)
+  },
+  {
+    label: "Episodes",
+    clickable: false,
+  }
+]);
+
   // Check if the show is already in cache to save network requests
   if (episodesCache[showId]) {
-    console.log(`Loading show ${showId} from cache...`);
+    //console.log(`Loading show ${showId} from cache...`);
     renderShowData(episodesCache[showId]);
     return;
   }
@@ -79,7 +85,7 @@ async function fetchDisplayEpisodes(showId) {
   rootElem.innerHTML = "<p>Loading episodes… please wait.</p>";
 
   try {
-    console.log(`Fetching show ${showId} from API...`);
+    //console.log(`Fetching show ${showId} from API...`);
     const episodesResponse = await fetch(
       `https://api.tvmaze.com/shows/${showId}/episodes`,
     );
