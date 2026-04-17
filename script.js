@@ -116,6 +116,44 @@ function makeSeasonAndEpisodes(episode) {
   return `S${paddedSeason}E${paddedEpisode}`;
 }
 
+// make the page for the shows
+function makePageForShows(allShows) {
+  const root = document.getElementById('root');
+  root.innerHTML = "";
+
+  allShows.forEach((show) => {
+    const showCard = document.createElement('div');
+    showCard.className = 'show-card';
+
+    const image = document.createElement('img');
+    image.src = show ? show.image.medium : 'tps://via.placeholder.com/210x295?text=No+Image';
+    image.alt = show.name;
+    showCard.appendChild(image);
+
+    const title = document.createElement('h2');
+    title.textContent = show.name;
+    showCard.appendChild(title);
+
+    const summary = document.createElement('p');
+    genres.innerHTML = `<strong>Genres:</strong> ${show.genres.join(', ') || 'N/A'}`;
+    showCard.appendChild(genres);
+
+    const status = document.createElement('p');
+    status.innerHTML = `<strong>Status:</strong> ${show.status || 'N/A'}`;
+    showCard.appendChild(status);
+
+    const rating = document.createElement('p');
+    const ratingValue = show.rating && show.rating.average ? show.rating.average : 'N/A';
+    rating.innerHTML = `<strong>Rating:</strong> ${ratingValue}`;
+    showCard.appendChild(rating);
+
+    const runtime = document.createElement('p');
+    runtime.innerHTML = `<strong>Runtime:</strong> ${show.runtime ? show.runtime + ' min' : 'N/A'}`; 
+  
+    root.appendChild(showCard);
+  }
+)}
+
 /**
  * Creates and appends episode cards to the DOM
  */
@@ -133,14 +171,14 @@ function makePageForEpisodes(episodeList) {
     const seasonTitle = document.createElement('h2');
     seasonTitle.textContent = `${episode.name} - ${makeSeasonAndEpisodes(
       episode
-    )}`;
+    )}`;ht
     episodeCard.appendChild(seasonTitle);
 
     // image for season episode
     const image = document.createElement('img');
     image.src = episode.image
       ? episode.image.medium
-      : 'https://via.placeholder.com/210x295?text=No+Image';
+      : "https://static.tvmaze.com/images/no-img/no-img-portrait-text.png";
     image.alt = episode.name;
     episodeCard.appendChild(image);
 
